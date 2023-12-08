@@ -8,15 +8,11 @@ const fs = require("fs");
   Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
   Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 
-  Solution: 8
+  Solution: 2286
 
 */
 
-const texts = fs.readFileSync("./test-input1.txt", "utf-8");
-
-const rl = 12;
-const gl = 13;
-const bl = 14;
+const texts = fs.readFileSync("./test-input2.txt", "utf-8");
 
 const textsArr = texts.split("\n");
 
@@ -25,15 +21,16 @@ let total = 0;
 textsArr.forEach((text) => {
   const str = text.split(":");
 
-  const gameId = str[0].split(" ")[1];
-
   const cubes = str[1]
     .split(";")
     .join(",")
     .split(" ")
     .filter((v) => v);
 
-  let isLessthanLimit = true;
+  let mB = 0;
+  let mG = 0;
+  let mR = 0;
+  let product = 0;
 
   for (let j = 0; j < cubes.length; j++) {
     const cube = cubes[j];
@@ -42,35 +39,27 @@ textsArr.forEach((text) => {
     if (val.indexOf("blue") > -1) {
       const i = j - 1;
       const v = cubes[+i];
-
-      if (v > bl) {
-        isLessthanLimit = false;
-        break;
-      }
+      mB = Math.max(v, mB);
     }
     if (cube.indexOf("green") > -1) {
       const i = j - 1;
       const v = cubes[+i];
-
-      if (v > gl) {
-        isLessthanLimit = false;
-        break;
-      }
+      mG = Math.max(v, mG);
     }
     if (cube.indexOf("red") > -1) {
       const i = j - 1;
       const v = cubes[+i];
-
-      if (v > rl) {
-        isLessthanLimit = false;
-        break;
-      }
+      mR = Math.max(v, mR);
     }
   }
 
-  if (isLessthanLimit) {
-    total += +gameId;
-  }
+  product = mB * mG * mR;
+
+  mB = 0;
+  mG = 0;
+  mR = 0;
+
+  total += +product;
 });
 
 console.log("total", total);
